@@ -25,16 +25,16 @@ from common.report_factory import ReportOutputFormat
 from common.report import Report
 from common.issue import BaseReportItem
 
-from advisor.arm64_config_guess_scanner import Arm64ConfigGuessScanner
-from advisor.arm64_source_scanner import Arm64SourceScanner
+from advisor.riscv_config_guess_scanner import RiscvConfigGuessScanner
+from advisor.riscv_source_scanner import RiscvSourceScanner
 from advisor.report_item import CPP_REPORT_TYPES
 
 
 class TestCsvReport(unittest.TestCase):
 
     def test_output(self):
-        config_guess_scanner = Arm64ConfigGuessScanner(ReportOutputFormat.CSV, march='armv8-a')
-        source_scanner = Arm64SourceScanner(ReportOutputFormat.CSV, march='armv8-a', compiler='gcc', warning_level='L1')
+        config_guess_scanner = RiscvConfigGuessScanner(ReportOutputFormat.CSV, march='rv64gc')
+        source_scanner = RiscvSourceScanner(ReportOutputFormat.CSV, march='rv64gc', compiler='gcc', warning_level='L1')
 
         Report.REPORT_ITEM = BaseReportItem
         Report.REPORT_ITEM.TYPES += CPP_REPORT_TYPES

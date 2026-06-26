@@ -6827,3 +6827,5 @@ INCOMPATIBLE_HEADER_FILE:
           检测到使用 popcntintrin.h 文件
 
           该头文件是 x86/x86-64 架构专用的, 不兼容 arm/aarch64 等架构;
+
+RISCV64_COMPILER_OPTION_CHECKPOINTS: []

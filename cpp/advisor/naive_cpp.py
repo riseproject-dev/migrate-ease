@@ -20,7 +20,7 @@ from enum import Enum
 from typing import Optional
 
 from common.arch_strings import *
-from .native_cpp_evaluator import AARCH64ConditionEvaluator, State
+from .native_cpp_evaluator import ArchConditionEvaluator, State
 
 
 class CompilerCond(Enum):
@@ -109,6 +109,9 @@ class NaiveCpp(object):
     AARCH64_UNSUPPORTED_MACROS_RE = re.compile(r'(?i)(?:\w*_?|^)(%s)(?:_?\w*|$)'
                                               % str.join('|', AARCH64_UNSUPPORTED_COMPILERS + NON_AARCH64_ARCHS
                                                          + AARCH64_OTHER_UNSUPPORTED_MACROS))
+    RISCV_UNSUPPORTED_MACROS_RE = re.compile(r'(?i)(?:\w*_?|^)(%s)(?:_?\w*|$)'
+                                              % str.join('|', AARCH64_UNSUPPORTED_COMPILERS + NON_RISCV_ARCHS
+                                                         + AARCH64_OTHER_UNSUPPORTED_MACROS))
 
     def __init__(self, march: str, macros=None, warning_level=None):
 
@@ -119,7 +122,8 @@ class NaiveCpp(object):
         self.level_state = [State.SUPPORT]
 
         if self.march in SUPPORTED_MARCH:
-            self.condition_evaluator = AARCH64ConditionEvaluator(self.macros, self.AARCH64_UNSUPPORTED_MACROS_RE)
+            self.unsupported_macros_re = self.RISCV_UNSUPPORTED_MACROS_RE
+            self.condition_evaluator = ArchConditionEvaluator(self.macros, self.unsupported_macros_re)
         else:
             raise RuntimeError('unknown target processor architecuture: %s.' % self.march)
 
@@ -308,7 +312,7 @@ class NaiveCpp(object):
 
             if macro in self.macros.keys():
                 self.branches.append([State.SUPPORT])
-            elif self.AARCH64_UNSUPPORTED_MACROS_RE.match(macro):
+            elif self.unsupported_macros_re.match(macro):
                 self.branches.append([State.UNSUPPORT])
             else:
                 self.branches.append([State.UNKNOWN])
@@ -326,7 +330,7 @@ class NaiveCpp(object):
 
             if macro in self.macros.keys():
                 self.branches.append([State.UNSUPPORT])
-            elif self.AARCH64_UNSUPPORTED_MACROS_RE.match(macro):
+            elif self.unsupported_macros_re.match(macro):
                 self.branches.append([State.SUPPORT])
             else:
                 self.branches.append([State.UNKNOWN])

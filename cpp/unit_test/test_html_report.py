@@ -25,19 +25,19 @@ from common.report import Report
 from common.issue import BaseReportItem
 from advisor.report_item import CPP_REPORT_TYPES
 
-from advisor.arm64_config_guess_scanner import Arm64ConfigGuessScanner
-from advisor.arm64_source_scanner import Arm64SourceScanner
+from advisor.riscv_config_guess_scanner import RiscvConfigGuessScanner
+from advisor.riscv_source_scanner import RiscvSourceScanner
 
 
 class TestHtmlReport(unittest.TestCase):
 
     def test_item_icons(self):
-        config_guess_scanner = Arm64ConfigGuessScanner(ReportOutputFormat.HTML, march='armv8-a')
-        source_scanner = Arm64SourceScanner(ReportOutputFormat.HTML, march='armv8-a', compiler='gcc', warning_level='L1')
+        config_guess_scanner = RiscvConfigGuessScanner(ReportOutputFormat.HTML, march='rv64gc')
+        source_scanner = RiscvSourceScanner(ReportOutputFormat.HTML, march='rv64gc', compiler='gcc', warning_level='L1')
 
         Report.REPORT_ITEM = BaseReportItem
         Report.REPORT_ITEM.TYPES += CPP_REPORT_TYPES
-        report = HtmlReport('/root', march='armv8-a')
+        report = HtmlReport('/root', march='rv64gc')
 
         io_object = io.StringIO(' __asm__ __volatile__( "pause" : : : "memory" )')
         source_scanner.scan_file_object('test_inline_asm.c',

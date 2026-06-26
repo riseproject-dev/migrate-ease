@@ -26,21 +26,27 @@ from common.report_factory import ReportOutputFormat
 from common.report import Report
 from common.issue import BaseReportItem
 
-from advisor.arm64_config_guess_scanner import Arm64ConfigGuessScanner
-from advisor.arm64_source_scanner import Arm64SourceScanner
+from advisor.riscv_config_guess_scanner import RiscvConfigGuessScanner
+from advisor.riscv_source_scanner import RiscvSourceScanner
 from advisor.report_item import CPP_REPORT_TYPES
 
 
 class TestJsonReport(unittest.TestCase):
 
     def test_output(self):
-        config_guess_scanner = Arm64ConfigGuessScanner(ReportOutputFormat.JSON, march='armv8-a')
-        source_scanner = Arm64SourceScanner(ReportOutputFormat.JSON, march='armv8-a', compiler='gcc', warning_level='L1')
+        config_guess_scanner = RiscvConfigGuessScanner(ReportOutputFormat.JSON, march='rv64gc')
+        source_scanner = RiscvSourceScanner(ReportOutputFormat.JSON, march='rv64gc', compiler='gcc', warning_level='L1')
 
-        issue_type_config = IssueTypeConfig()
+        # issue_type_config is the raw --issue-types string (or None) in
+        # production; passing the IssueTypeConfig object is not JSON
+        # serializable. Use the default filter string here.
         Report.REPORT_ITEM = BaseReportItem
-        Report.REPORT_ITEM.TYPES += CPP_REPORT_TYPES
-        report = JsonReport('/root', issue_type_config=issue_type_config)
+        # Extend the shared global type registry idempotently: both test
+        # methods run this, and a plain += would duplicate CPP_REPORT_TYPES,
+        # causing Report.write() to emit each issue once per duplicate type.
+        Report.REPORT_ITEM.TYPES += [
+            t for t in CPP_REPORT_TYPES if t not in Report.REPORT_ITEM.TYPES]
+        report = JsonReport('/root', target_os='linux', issue_type_config=IssueTypeConfig.DEFAULT_FILTER)
 
         report.add_source_file('/root/src/test_inline_asm.c')
         io_object = io.StringIO('__asm__ __volatile__( "pause" : : : "memory" )')
@@ -76,8 +82,8 @@ class TestJsonReport(unittest.TestCase):
             self.assertEqual(len(json_top['issues']), 3)
             self.assertIn('remarks', json_top)
             self.assertEqual(len(json_top['remarks']), 0)
-            self.assertIn('issue_types', json_top)
-            self.assertEqual(json_top['issue_types'], IssueTypeConfig.DEFAULT_FILTER)
+            self.assertIn('issue_type_config', json_top)
+            self.assertEqual(json_top['issue_type_config'], IssueTypeConfig.DEFAULT_FILTER)
             self.assertIn('target_os', json_top)
             self.assertIn(json_top['target_os'], ['linux', 'windows'])
             self.assertIn('root_directory', json_top)
@@ -107,13 +113,16 @@ class TestJsonReport(unittest.TestCase):
 
     def test_issue_count_equals_zero(self):
 
-        source_scanner = Arm64SourceScanner(ReportOutputFormat.JSON, march='armv8-a', compiler='gcc', warning_level='L1')
+        source_scanner = RiscvSourceScanner(ReportOutputFormat.JSON, march='rv64gc', compiler='gcc', warning_level='L1')
 
-        issue_type_config = IssueTypeConfig()
         Report.REPORT_ITEM = BaseReportItem
-        Report.REPORT_ITEM.TYPES += CPP_REPORT_TYPES
+        # Extend the shared global type registry idempotently: both test
+        # methods run this, and a plain += would duplicate CPP_REPORT_TYPES,
+        # causing Report.write() to emit each issue once per duplicate type.
+        Report.REPORT_ITEM.TYPES += [
+            t for t in CPP_REPORT_TYPES if t not in Report.REPORT_ITEM.TYPES]
         JsonReport.lang = 'cpp'
-        report = JsonReport('/root', issue_type_config=issue_type_config)
+        report = JsonReport('/root', issue_type_config=IssueTypeConfig.DEFAULT_FILTER)
 
         report.add_source_file('/root/src/test.c')
         io_object = io.StringIO('xxx" )')
@@ -131,7 +140,7 @@ class TestJsonReport(unittest.TestCase):
         with open(fname) as ifp:
             json_top = json.load(ifp)
 
-        self.assertEqual(json_top['issue_count'], 0)
+        self.assertEqual(json_top['total_issue_count'], 0)
 
 
 if __name__ == '__main__':

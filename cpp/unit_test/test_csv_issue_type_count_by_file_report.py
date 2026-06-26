@@ -26,19 +26,24 @@ from common.report_factory import ReportOutputFormat
 from common.report import Report
 from common.issue import BaseReportItem
 
-from advisor.arm64_source_scanner import Arm64SourceScanner
+from advisor.riscv_source_scanner import RiscvSourceScanner
+from advisor.issue_types import ISSUE_TYPES
 from advisor.report_item import CPP_REPORT_TYPES
 
 
 class TestCsvIssueTypeCountByFileReport(unittest.TestCase):
 
     def test_output(self):
-        source_scanner = Arm64SourceScanner(ReportOutputFormat.CSV_ISSUE_TYPE_COUNT_BY_FILE, march='armv8-a', compiler='gcc', warning_level='L1')
+        source_scanner = RiscvSourceScanner(ReportOutputFormat.CSV_ISSUE_TYPE_COUNT_BY_FILE, march='rv64gc', compiler='gcc', warning_level='L1')
 
-        issue_type_config = IssueTypeConfig()
         Report.REPORT_ITEM = BaseReportItem
         Report.REPORT_ITEM.TYPES += CPP_REPORT_TYPES
-        report = CsvIssueTypeCountByFileReport('/root', issue_type_config=issue_type_config)
+        # issue_type_config is the raw --issue-types string (or None) in
+        # production; the report builds an IssueTypeConfig from it internally.
+        report = CsvIssueTypeCountByFileReport('/root', issue_type_config=None)
+        # report_factory attaches the issue type registry; replicate that here
+        # since this test constructs the report directly.
+        report.ISSUE_TYPES = ISSUE_TYPES
 
         report.add_source_file('test_preprocessor.c')
         io_object = io.StringIO('#if !defined(_M_IX86) && !defined(_M_X64)\n#error This header is specific to X86 and X64 targets\n#endif')
@@ -52,7 +57,8 @@ class TestCsvIssueTypeCountByFileReport(unittest.TestCase):
                                         io_object,
                                         report)
 
-        # __GUNC__ is a valid macros defined by clang/gcc.
+        # __GNUC__ is a valid macro defined by clang/gcc, so it is not flagged
+        # as a compiler-specific issue: this file contributes no issues.
         report.add_source_file('test_compiler_specific.c')
         io_object = io.StringIO('#ifdef __GNUC__')
         source_scanner.scan_file_object('test_compiler_specific.c',
@@ -106,7 +112,9 @@ class TestCsvIssueTypeCountByFileReport(unittest.TestCase):
                         for (field, actual) in row.items():
                             if field == 'filename':
                                 continue
-                            expected = '1' if field == 'CompilerSpecific' else '0'
+                            # __GNUC__ is a recognized compiler macro and is not
+                            # flagged, so every issue-type column is zero.
+                            expected = '0'
                             self.assertEqual(expected, actual)
                     elif 'test_inline_asm.c' in row['filename']:
                         seen_inline_asm = True

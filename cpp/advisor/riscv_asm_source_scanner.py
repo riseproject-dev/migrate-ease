@@ -15,8 +15,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-#  Libraries that are not available on aarch64.
-ARM64_ARCH_SPECIFIC_LIBS = ['mkl', 'otherarch']
+from .asm_source_scanner import AsmSourceScanner
 
-#  Libraries that are not available on riscv64.
-RISCV64_ARCH_SPECIFIC_LIBS = ['mkl', 'otherarch']
+
+class RiscvAsmSourceScanner(AsmSourceScanner):
+
+    """
+    Scanner that looks for assembly source files.
+    """
+    pass

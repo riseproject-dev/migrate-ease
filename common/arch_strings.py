@@ -18,6 +18,12 @@ limitations under the License.
 # NOTE: this file contains instruction set architecture related info only!
 # NOTE: arch names which contain other arch names comes first!
 
+# RISC-V scan targets. These are the only values accepted for --march.
+RV64GC = 'rv64gc'
+RVA23 = 'rva23'
+
+# Arm ISA names. No longer scan targets in this fork -- kept because
+# instance_strings.py and other detection logic still reference them.
 ARMV8_0 = 'armv8-a'
 ARMV8_6_SVE2 = 'armv8.6-a+sve2'
 ARMV8_2 = 'armv8.2-a'
@@ -25,7 +31,7 @@ ARMV8_4 = 'armv8.4-a'
 ARMV9_0 = 'armv9-a'
 ARMV9_2 = 'armv9.2-a'
 
-SUPPORTED_MARCH = [ARMV8_0, ARMV8_6_SVE2, ARMV9_0, ARMV9_2]
+SUPPORTED_MARCH = [RV64GC, RVA23]
 DEFAULT_ARCH = SUPPORTED_MARCH[0]
 
 AARCH64_ARCHS = ['aarch64','arm64', 'arm', 'neon', 'sve2', 'sve', 'aes', 'sha',
@@ -35,15 +41,21 @@ X86_ARCHS = ['amd64', 'avx', 'avx2', 'avx512', 'i386', 'i586', 'i686', 'ia32',
              'ia64', 'intel', 'intel64', 'm68k', 'sse5', 'sse4.2', 'sse4.1', 'sse4',
              'sse3', 'sse2', 'sse', 'x86_64', 'x86-64', 'x86', 'x64']
 
+# RISC-V detection tokens: arch names scanned for in #ifdef/#if expressions.
+# NOTE: arch names which contain other arch names come first (see file header).
+RISCV_ARCHS = ['riscv64', 'riscv32', 'riscv', 'rv64', 'rv32', 'rvv']
+
 OTHER_ARCHS = ['alpha', 'altivec', 'hppa', 'ix86', 'microblaze', 'mips',
                'nios2', 'otherarch', 'power', 'powerpc', 'powerpc32', 'powerpc64',
                'ppc64le', 'ppc64', 'ppc', 's390', 'sh', 'sparc', 'tile']
 
-ALL_ARCHS = AARCH64_ARCHS + X86_ARCHS + OTHER_ARCHS
+ALL_ARCHS = AARCH64_ARCHS + X86_ARCHS + RISCV_ARCHS + OTHER_ARCHS
 
 NON_AARCH64_ARCHS = [x for x in ALL_ARCHS if x not in AARCH64_ARCHS]
 
 NON_X86_ARCHS = [x for x in ALL_ARCHS if x not in X86_ARCHS]
+
+NON_RISCV_ARCHS = [x for x in ALL_ARCHS if x not in RISCV_ARCHS]
 
 SUPPORTED_COMPILERS = ['clang', 'gcc', 'llvm', 'gnuc', '_msc_ver']
 

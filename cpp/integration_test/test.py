@@ -62,7 +62,7 @@ def main():
 
         print(f"running sub-test for {arch}")
 
-        if arch == "armv8.6-a+sve2":
+        if arch in ("rv64gc", "rva23"):
             for level in ["L1", "L2"]:
                 for compiler in ["gcc", "clang"]:
                     print(f"running test for warning-level {level}-{compiler}")

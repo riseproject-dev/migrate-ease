@@ -6816,3 +6816,5 @@ INCOMPATIBLE_HEADER_FILE:
           The use of popcntintrin.h file is detected
 
           This header file is dedicated to the x86/x86-64 architecture and is not compatible with architectures such as arm/aarch64;
+
+RISCV64_COMPILER_OPTION_CHECKPOINTS: []

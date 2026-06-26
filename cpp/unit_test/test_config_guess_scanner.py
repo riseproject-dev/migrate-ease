@@ -24,17 +24,17 @@ from common.report import Report
 from common.issue import BaseReportItem
 
 from advisor.report_item import CPP_REPORT_TYPES
-from advisor.arm64_config_guess_scanner import Arm64ConfigGuessScanner
+from advisor.riscv_config_guess_scanner import RiscvConfigGuessScanner
 
 class TestConfigGuessScanner(unittest.TestCase):
 
-    def test_accepts_file_arm64(self):
-        config_guess_scanner = Arm64ConfigGuessScanner(ReportOutputFormat.JSON, march='armv8-a')
+    def test_accepts_file_riscv(self):
+        config_guess_scanner = RiscvConfigGuessScanner(ReportOutputFormat.JSON, march='rv64gc')
         self.assertFalse(config_guess_scanner.accepts_file('test'))
         self.assertTrue(config_guess_scanner.accepts_file('config.guess'))
 
-    def test_scan_file_object_arm64(self):
-        config_guess_scanner = Arm64ConfigGuessScanner(ReportOutputFormat.JSON, march='armv8-a')
+    def test_scan_file_object_riscv(self):
+        config_guess_scanner = RiscvConfigGuessScanner(ReportOutputFormat.JSON, march='rv64gc')
 
         Report.REPORT_ITEM = BaseReportItem
         Report.REPORT_ITEM.TYPES += CPP_REPORT_TYPES
@@ -45,14 +45,15 @@ class TestConfigGuessScanner(unittest.TestCase):
                                               report)
         self.assertEqual(len(report.issues), 1)
 
+        # A config.guess that recognizes the riscv64 architecture yields no issue.
         Report.REPORT_ITEM = BaseReportItem
         Report.REPORT_ITEM.TYPES += CPP_REPORT_TYPES
         report = Report('/root')
-        io_object = io.StringIO('aarch64:Linux')
+        io_object = io.StringIO('riscv64:Linux')
         config_guess_scanner.scan_file_object('config.guess',
                                               io_object,
                                               report)
-        self.assertEqual(len(report.remarks), 0)
+        self.assertEqual(len(report.issues), 0)
 
 if __name__ == '__main__':
     unittest.main()

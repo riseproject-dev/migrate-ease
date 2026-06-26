@@ -23,20 +23,20 @@ from common.json_report import JsonReport
 from common.report import Report
 from common.issue import BaseReportItem
 
-from advisor.arm64_asm_source_scanner import Arm64AsmSourceScanner
+from advisor.riscv_asm_source_scanner import RiscvAsmSourceScanner
 from advisor.report_item import CPP_REPORT_TYPES
 
 class TestAsmSourceScanner(unittest.TestCase):
 
-    def test_accepts_file_arm64(self):
-        asm_source_scanner = Arm64AsmSourceScanner(ReportOutputFormat.JSON, march='armv8-a')
+    def test_accepts_file_riscv(self):
+        asm_source_scanner = RiscvAsmSourceScanner(ReportOutputFormat.JSON, march='rv64gc')
         self.assertFalse(asm_source_scanner.accepts_file('test.c'))
         self.assertFalse(asm_source_scanner.accepts_file('tests'))
         self.assertTrue(asm_source_scanner.accepts_file('test.s'))
         self.assertTrue(asm_source_scanner.accepts_file('test.S'))
 
-    def test_scan_file_object_arm64(self):
-        asm_source_scanner = Arm64AsmSourceScanner(ReportOutputFormat.JSON, march='armv8-a')
+    def test_scan_file_object_riscv(self):
+        asm_source_scanner = RiscvAsmSourceScanner(ReportOutputFormat.JSON, march='rv64gc')
 
         Report.REPORT_ITEM = BaseReportItem
         Report.REPORT_ITEM.TYPES += CPP_REPORT_TYPES

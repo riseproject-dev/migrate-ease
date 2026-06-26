@@ -28,6 +28,7 @@ from common.report import Report
 
 from . import __project__, __summary__, __target__, __version__
 from .arm64_scanners import Arm64Scanners
+from .riscv_scanners import RiscvScanners
 from .issue_types import ISSUE_TYPES
 from .report_item import CPP_REPORT_TYPES
 
@@ -71,7 +72,7 @@ def main():
                                          progress=args.progress)
 
     issue_type_config_instance = IssueTypeConfig(args.issue_types, ISSUE_TYPES)
-    if args.march ==  ARMV8_0 or args.march == ARMV8_6_SVE2:
+    if args.march in SUPPORTED_MARCH:
         try:
             if args.target_compiler not in SUPPORTED_COMPILERS_ARM:
                 raise ValueError
@@ -95,7 +96,7 @@ def main():
             sys.exit(1)
 
     if args.march in SUPPORTED_MARCH:
-        scanners = Arm64Scanners(issue_type_config_instance,
+        scanners = RiscvScanners(issue_type_config_instance,
                                  output_format=args.output_format,
                                  march=args.march,
                                  compiler=args.target_compiler,
