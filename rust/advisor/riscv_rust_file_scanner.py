@@ -13,13 +13,14 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
-from .rust_link_library_scanner import RustLinkLibraryScanner
+
+from .rust_file_scanner import RustFileScanner
 
 
-class Arm64LibScanner(RustLinkLibraryScanner):
+class RiscvRustFileScanner(RustFileScanner):
 
     """
-    Scanner that scans .so dynamic link libs for ARM64 potential
+    Scanner that scans .rs source files for RISC-V potential
     porting issues.
     """
 

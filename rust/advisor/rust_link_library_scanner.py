@@ -28,7 +28,7 @@ class RustLinkLibraryScanner(RustScanner):
 
     RUST_STATIC_LINK_LIBRARY_EXTENSIONS = ['.a', '.o']
 
-    EM_AARCH64 = ['EM_AARCH64', 'EM_ARM']
+    EM_RISCV = ['EM_RISCV']
 
     SO_RE = re.compile(r'.*[.](so)[.]?')
 
@@ -60,7 +60,7 @@ class RustLinkLibraryScanner(RustScanner):
     def scan_file_arch(self, match, file_arch):
 
         if self.march in SUPPORTED_MARCH:
-            if file_arch not in self.__class__.EM_AARCH64:
+            if file_arch not in self.__class__.EM_RISCV:
                 match = True
 
         return match

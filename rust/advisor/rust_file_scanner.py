@@ -41,7 +41,7 @@ class RustFileScanner(RustScanner):
     RS_SOURCE_EXTENSIONS = ['.rs']
     inlineAsm_pattern = re.compile(r'(?mis)\A\s*(global_asm!|asm!|llvm_asm!)')
 
-    AARCH64_INCOMPATIBLE_INTRINSICS = []
+    RISCV_INCOMPATIBLE_INTRINSICS = []
     AARCH64_INLINE_ASSEMBLY_CHECKPOINTS = []
     ARCH_INCOMPATIBLE_INTRINSICS = []
     ASSEMBLY_CHECKPOINTS = []
@@ -59,9 +59,14 @@ class RustFileScanner(RustScanner):
 
         start_time = time.time()
 
-        self.AARCH64_INCOMPATIBLE_INTRINSICS = init_checkpoints(
-            self.checkpoints_content['X86_INTRINSICS'] + self.checkpoints_content['OTHER_ARCH_INTRINSICS'] ,
-            self.checkpoints_content["COMMON_INTRINSICS"] + self.checkpoints_content["AARCH64_INTRINSICS"]
+        #  On a RISC-V target, x86, Arm/AArch64 and other-arch intrinsics are all
+        #  incompatible; only the compiler-common builtins are kept.
+        self.RISCV_INCOMPATIBLE_INTRINSICS = init_checkpoints(
+            self.checkpoints_content['X86_INTRINSICS'] +
+            self.checkpoints_content['OTHER_ARCH_INTRINSICS'] +
+            self.checkpoints_content['AARCH64_INTRINSICS'],
+            self.checkpoints_content['COMMON_INTRINSICS'] +
+            self.checkpoints_content['RISCV_INTRINSICS']
         )
 
         self.AARCH64_INLINE_ASSEMBLY_CHECKPOINTS = init_checkpoints(
@@ -87,7 +92,7 @@ class RustFileScanner(RustScanner):
             self.FILE_SUMMARY[self.RUST]['loc'] += len(_lines)
 
         if self.march in SUPPORTED_MARCH:
-            self.ARCH_INCOMPATIBLE_INTRINSICS = self.AARCH64_INCOMPATIBLE_INTRINSICS
+            self.ARCH_INCOMPATIBLE_INTRINSICS = self.RISCV_INCOMPATIBLE_INTRINSICS
             self.ASSEMBLY_CHECKPOINTS = self.AARCH64_INLINE_ASSEMBLY_CHECKPOINTS
         else:
             raise RuntimeError('no scanner available for target processor architecture %s.' % self.march)

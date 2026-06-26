@@ -3230,3 +3230,7 @@ OTHER_ARCH_INTRINSICS:
     - signature: vprintf()
     #powerpc intrinsics
     - signature: vec_xxpermdi()
+
+# RISC-V-specific intrinsics that are compatible and should be excluded from flagging.
+# Empty for now; populate as RISC-V intrinsic support is added to the scanner.
+RISCV_INTRINSICS: []

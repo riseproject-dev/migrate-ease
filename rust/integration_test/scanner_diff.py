@@ -51,8 +51,8 @@ with open(args.json_report) as f2:
 for i in range(nof_issues):
     report['issues'][i]['tig_of_first_traversal'] = 'false'
 
-lib_aarch = ['cygrpc_arm.so', 'libhello_arm.so', 'libnumber_aarch.a', 'libotsclient_aarch.a', '_speedups.so']
-issue_lib_aarch = ['_speedups.so']
+lib_aarch = ['libnumber_riscv.a', 'libnumber_aarch.a']
+issue_lib_aarch = ['libnumber_aarch.a']
 
 for filename in os.listdir(args.src_dir):
     if os.path.splitext(filename)[1] != ".json":
