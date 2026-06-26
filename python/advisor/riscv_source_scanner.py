@@ -17,10 +17,10 @@ limitations under the License.
 from .python_file_scanner import PythonFileScanner
 
 
-class Arm64SourceScanner(PythonFileScanner):
+class RiscvSourceScanner(PythonFileScanner):
 
     """
-    Scanner that scans .py source files for ARM64 potential
+    Scanner that scans .py source files for RISC-V potential
     porting issues.
     """
 

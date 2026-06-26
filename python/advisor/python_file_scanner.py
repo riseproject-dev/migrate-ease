@@ -41,7 +41,7 @@ class PythonFileScanner(PythonScanner):
     Scanner that scans .py source files for potential porting issues
     """
 
-    AARCH64_INCOMPATIBLE_EXTENSION_PACKAGES = []
+    RISCV_INCOMPATIBLE_EXTENSION_PACKAGES = []
     PACKAGE_CHECKPOINTS = []
     PY_SOURCE_EXTENSIONS = ['.py']
     # from cffi import FFI
@@ -62,10 +62,11 @@ class PythonFileScanner(PythonScanner):
 
         start_time = time.time()
 
-        self.AARCH64_INCOMPATIBLE_EXTENSION_PACKAGES = init_checkpoints(
+        self.RISCV_INCOMPATIBLE_EXTENSION_PACKAGES = init_checkpoints(
             self.checkpoints_content['X86_PYTHON_EXTENSION_PACKAGES'],
-            self.checkpoints_content["AARCH64_PYTHON_EXTENSION_PACKAGES"] +
-            self.checkpoints_content["COMMON_AARCH64_AND_X86_PYTHON_EXTENSION_PACKAGES"]
+            self.checkpoints_content['RISCV64_PYTHON_EXTENSION_PACKAGES'] +
+            self.checkpoints_content['AARCH64_PYTHON_EXTENSION_PACKAGES'] +
+            self.checkpoints_content['COMMON_AARCH64_AND_X86_PYTHON_EXTENSION_PACKAGES']
         )
         end_time = time.time()
 
@@ -86,7 +87,7 @@ class PythonFileScanner(PythonScanner):
             self.FILE_SUMMARY[self.PY]['loc'] += len(_lines)
 
         if self.march in SUPPORTED_MARCH:
-            self.PACKAGE_CHECKPOINTS = self.AARCH64_INCOMPATIBLE_EXTENSION_PACKAGES
+            self.PACKAGE_CHECKPOINTS = self.RISCV_INCOMPATIBLE_EXTENSION_PACKAGES
         else:
             raise RuntimeError('no scanner available for target processor architecture %s.' % self.march)
 

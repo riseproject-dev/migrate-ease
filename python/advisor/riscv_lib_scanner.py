@@ -16,10 +16,10 @@ limitations under the License.
 from .python_link_library_scanner import PythonLinkLibraryScanner
 
 
-class Arm64LibScanner(PythonLinkLibraryScanner):
+class RiscvLibScanner(PythonLinkLibraryScanner):
 
     """
-    Scanner that scans .so dynamic link libs for ARM64 potential
+    Scanner that scans .so dynamic link libs for RISC-V potential
     porting issues.
     """
 

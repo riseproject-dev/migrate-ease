@@ -25,7 +25,7 @@ from common.issue_type_config import IssueTypeConfig
 
 from . import __project__, __target__, __summary__, __version__
 from .issue_types import ISSUE_TYPES
-from .arm64_scanners import Arm64Scanners
+from .riscv_scanners import RiscvScanners
 from .report_item import PYTHON_REPORT_TYPES
 
 
@@ -64,7 +64,7 @@ def main():
             sys.exit(1)
 
     if args.march in SUPPORTED_MARCH:
-        scanners = Arm64Scanners(issue_type_config_instance,
+        scanners = RiscvScanners(issue_type_config_instance,
                                  output_format=args.output_format,
                                  march=args.march)
 
