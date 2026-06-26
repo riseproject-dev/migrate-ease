@@ -18,6 +18,6 @@ limitations under the License.
 __project__ = 'cpp porting-advisor'
 __target__ = 'C/C++'
 __version__ = '2.0.0'
-__summary__ = 'Produces an aarch64 porting readiness report.'
+__summary__ = 'Produces a RISC-V porting readiness report.'
 import sys
 sys.path.append('../../..')

@@ -25,7 +25,7 @@ from common.report_factory import ReportOutputFormat
 
 from .asm_issue import AsmIssue
 from .go_scanner import GoScanner
-from .golang_asm_strings import GOLANG_ASM_AARCH64, GOLANG_ASM_NON_AARCH64, GOLANG_ASM_ALL_ARCHS
+from .golang_asm_strings import GOLANG_ASM_RISCV, GOLANG_ASM_NON_RISCV, GOLANG_ASM_ALL_ARCHS
 
 
 class AsmFileScanner(GoScanner):
@@ -34,9 +34,9 @@ class AsmFileScanner(GoScanner):
     """
 
     PY_SOURCE_EXTENSIONS = ['.s']
-    AARCH64_NAME_RE = re.compile(r'.*(%s).*' % '|'.join([(r'%s' % x) for x in GOLANG_ASM_AARCH64]))
-    NON_AARCH64_NAME_RE = re.compile(r'.*(%s).*' % '|'.join([(r'%s' % x) for x in GOLANG_ASM_NON_AARCH64]))
-    aarch64_prefix = 'arm64'
+    RISCV_NAME_RE = re.compile(r'.*(%s).*' % '|'.join([(r'%s' % x) for x in GOLANG_ASM_RISCV]))
+    NON_RISCV_NAME_RE = re.compile(r'.*(%s).*' % '|'.join([(r'%s' % x) for x in GOLANG_ASM_NON_RISCV]))
+    riscv_prefix = 'riscv64'
 
     def __init__(self, output_format, march):
         self.output_format = output_format
@@ -50,7 +50,7 @@ class AsmFileScanner(GoScanner):
 
         start_time = time.time()
 
-        self.AARCH64_INCOMPATIBLE_PLAN9_GOLANG_INTRINSICS = init_checkpoints(
+        self.INCOMPATIBLE_PLAN9_GOLANG_INTRINSICS = init_checkpoints(
             self.checkpoints_content['PLAN9_GOLANG_X86']
         )
 
@@ -88,18 +88,18 @@ class AsmFileScanner(GoScanner):
                 ext_name = os.path.splitext(fname)[1]
                 fname_prefix = base_name.rsplit('_', 1)[0]
                 arch_suffix = base_name.rsplit('_', 1)[1]
-                match_other_archs = self.__class__.NON_AARCH64_NAME_RE.search(arch_suffix)
-                match_aarch64 = self.__class__.AARCH64_NAME_RE.search(arch_suffix)
+                match_other_archs = self.__class__.NON_RISCV_NAME_RE.search(arch_suffix)
+                match_riscv = self.__class__.RISCV_NAME_RE.search(arch_suffix)
 
-                if match_aarch64:
-                    # Detect '_arm64' suffix in file name to confirm it matches the target architecture.
+                if match_riscv:
+                    # Detect '_riscv64' suffix in file name to confirm it matches the target architecture.
                     issues = []
                 elif match_other_archs:
-                    # If the file does not match the aarch64 architecture, attempt to find a corresponding
-                    # "_arm64.s" version.
-                    expected_aarch64_file = f"{fname_prefix}_{self.aarch64_prefix}{ext_name}"
-                    aarch64_file_path = os.path.join(directory, expected_aarch64_file)
-                    if not os.path.exists(aarch64_file_path):
+                    # If the file does not match the riscv64 architecture, attempt to find a corresponding
+                    # "_riscv64.s" version.
+                    expected_riscv_file = f"{fname_prefix}_{self.riscv_prefix}{ext_name}"
+                    riscv_file_path = os.path.join(directory, expected_riscv_file)
+                    if not os.path.exists(riscv_file_path):
                         lines[0] = "File: " + filename + " is not supported on target processor architecture: " + self.march
                         issues.append(AsmIssue(filename=filename,
                                    march=self.march,

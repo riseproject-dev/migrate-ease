@@ -51,10 +51,10 @@ with open(args.json_report) as f2:
 for i in range(nof_issues):
     report['issues'][i]['tig_of_first_traversal'] = 'false'
 
-lib_aarch = ['cygrpc_arm.so', 'libhello_arm.so', 'libnumber_aarch.a', 'libotsclient_aarch.a', '_speedups.so']
-issue_lib_aarch = ['_speedups.so']
+lib_aarch = ['libnumber_riscv.a', 'libnumber_aarch.a']
+issue_lib_aarch = ['libnumber_aarch.a']
 asm_test_folder="asm_test"
-asm_files = ['a_arm64.s', 'a_amd64.s', 'b_amd64.s']
+asm_files = ['a_riscv64.s', 'a_amd64.s', 'b_amd64.s']
 issue_asm_files = ['b_amd64.s']
 
 for filename in os.listdir(args.src_dir):

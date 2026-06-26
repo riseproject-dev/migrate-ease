@@ -13,14 +13,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+from .golang_link_library_scanner import GolangLinkLibraryScanner
 
-from .asm_file_scanner import AsmFileScanner
 
-
-class Arm64AsmFileScanner(AsmFileScanner):
+class RiscvLibScanner(GolangLinkLibraryScanner):
 
     """
-    Scanner that scans .s source files for ARM64 potential
+    Scanner that scans .so dynamic link libs for RISC-V potential
     porting issues.
     """
 

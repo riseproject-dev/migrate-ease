@@ -14,13 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from .golang_file_scanner import GolangFileScanner
+from .asm_file_scanner import AsmFileScanner
 
 
-class Arm64GoFileScanner(GolangFileScanner):
+class RiscvAsmFileScanner(AsmFileScanner):
 
     """
-    Scanner that scans .go source files for ARM64 potential
+    Scanner that scans .s source files for RISC-V potential
     porting issues.
     """
 

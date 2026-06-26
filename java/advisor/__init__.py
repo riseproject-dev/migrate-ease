@@ -17,7 +17,7 @@ limitations under the License.
 __project__ = 'java porting-advisor'
 __target__  = 'java'
 __version__ = '1.0.0'
-__summary__ = 'Produces an aarch64 porting readiness report.'
+__summary__ = 'Produces a RISC-V porting readiness report.'
 __webpage__ = ''
 import sys
 sys.path.append('../../..')

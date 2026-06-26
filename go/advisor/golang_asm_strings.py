@@ -15,8 +15,8 @@ limitations under the License.
 """
 # NOTE: golang asm re_name_compile
 
-GOLANG_ASM_AARCH64 = ['arm64', 'neon']
+GOLANG_ASM_RISCV = ['riscv64']
 
-GOLANG_ASM_NON_AARCH64 = ['386', 'amd64', 'arm', 'loong64', 'mips64', 'mips', 'ppc64', 'riscv64', 's390', 'wasm']
+GOLANG_ASM_NON_RISCV = ['386', 'amd64', 'arm64', 'arm', 'loong64', 'mips64', 'mips', 'ppc64', 's390', 'wasm', 'neon']
 
-GOLANG_ASM_ALL_ARCHS = GOLANG_ASM_AARCH64 + GOLANG_ASM_NON_AARCH64
+GOLANG_ASM_ALL_ARCHS = GOLANG_ASM_RISCV + GOLANG_ASM_NON_RISCV

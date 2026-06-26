@@ -16,7 +16,7 @@ limitations under the License.
 import os
 import re
 
-from common.arch_strings import AARCH64_ARCHS
+from common.arch_strings import SUPPORTED_MARCH
 from common.binary_tools import *
 from common.report_factory import ReportOutputFormat
 from .go_scanner import GoScanner
@@ -28,7 +28,7 @@ class GolangLinkLibraryScanner(GoScanner):
 
     GOLANG_STATIC_LINK_LIBRARY_EXTENSIONS = ['.a', '.o']
 
-    EM_AARCH64 = ['EM_AARCH64', 'EM_ARM']
+    EM_RISCV = ['EM_RISCV']
 
     SO_RE = re.compile(r'.*[.](so)[.]?')
 
@@ -59,8 +59,8 @@ class GolangLinkLibraryScanner(GoScanner):
 
     def scan_file_arch(self, match, file_arch):
 
-        if self.march in AARCH64_ARCHS:
-            if file_arch not in self.__class__.EM_AARCH64:
+        if self.march in SUPPORTED_MARCH:
+            if file_arch not in self.__class__.EM_RISCV:
                 match = True
 
         return match

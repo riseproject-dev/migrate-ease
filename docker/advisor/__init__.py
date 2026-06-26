@@ -17,7 +17,7 @@ limitations under the License.
 __project__ = 'docker porting-advisor'
 __target__  = 'Docker'
 __version__ = '1.0.0'
-__summary__ = 'Produces an aarch64/x86 porting readiness report.'
+__summary__ = 'Produces a RISC-V porting readiness report.'
 __webpage__ = ''
 import sys
 sys.path.append('../../..')
