@@ -13,13 +13,14 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+
 from .java_source_scanner import JavaSourceScanner
 
 
-class Arm64JavaSourceScanner(JavaSourceScanner):
+class RiscvJavaSourceScanner(JavaSourceScanner):
 
     """
-    Scanner that scans java source file for ARM64 potential
+    Scanner that scans .java source files for RISC-V potential
     porting issues.
     """
 

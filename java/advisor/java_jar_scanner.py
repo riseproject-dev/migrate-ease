@@ -34,7 +34,7 @@ class JavaJarScanner(JavaScanner):
     JAVA_DYNAMIC_LINK_LIBRARY_EXTENSIONS = ['.so', '.dll', '.dylib', '.jnilib']
     JAVA_STATIC_LINK_LIBRARY_EXTENSIONS = ['.a', '.o']
 
-    ARM64_ELF_RE = re.compile(r'ELF 64-bit.*, ARM aarch64,.*')
+    RISCV64_ELF_RE = re.compile(r'ELF 64-bit.*, UCB RISC-V,.*')
     LIBNAME_RE = re.compile(r'^(.*?)-(linux|osx|windows|win)(32|64)?(-\w+)?.*$')
 
     def __init__(self, output_format, march):
@@ -100,15 +100,15 @@ class JavaJarScanner(JavaScanner):
                 support_target_arch = False
                 for f in libs_list_dict[this_lib]:
                     info = magic.from_file(f)
-                    found = re.match(self.__class__.ARM64_ELF_RE, info)
+                    found = re.match(self.__class__.RISCV64_ELF_RE, info)
                     if found:
-                        # aarch64/linux version is found, mark this lib as "compatible"
+                        # riscv64/linux version is found, mark this lib as "compatible"
                         support_target_arch = True
                         break
 
                 if support_target_arch == False:
                     exist_libs = '\n\t'.join(libs_list_dict[this_lib])
-                    lines[lib_idx] = _("No native lib [%s] for aarch64. Existing libs are:\n\t%s") % (this_lib, exist_libs)
+                    lines[lib_idx] = _("No native lib [%s] for riscv64. Existing libs are:\n\t%s") % (this_lib, exist_libs)
                     issues.append(JavaJarIssue(filename=filename,
                                                  march=self.march,
                                                  lineno=0,

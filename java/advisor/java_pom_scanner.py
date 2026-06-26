@@ -29,7 +29,7 @@ from .java_pom_issue import JavaPomIssue
 
 class JavaPomScanner(JavaScanner):
 
-    AARCH64_INCOMPATILE_ARTIFACTS = []
+    RISCV64_INCOMPATILE_ARTIFACTS = []
 
     def __init__(self, output_format, march):
         self.output_format = output_format
@@ -46,9 +46,9 @@ class JavaPomScanner(JavaScanner):
         super().load_checkpoints()
 
         start_time = time.time()
-        #  Checkpoints for artifacts that don't work on aarch64
-        self.AARCH64_INCOMPATILE_ARTIFACTS = init_checkpoints(
-            self.checkpoints_content['AARCH64_INCOMPATILE_ARTIFACTS'],
+        #  Checkpoints for artifacts that don't work on riscv64
+        self.RISCV64_INCOMPATILE_ARTIFACTS = init_checkpoints(
+            self.checkpoints_content['RISCV64_INCOMPATILE_ARTIFACTS'],
             None
         )
         # please remember to remove lines for profiling after optimizing :)
@@ -149,7 +149,7 @@ class JavaPomScanner(JavaScanner):
         for this_dep in dependencies:
             # check using data from check_points.yaml
             artifact = this_dep['groupId']+'.'+this_dep['artifactId']+'.'+this_dep['version']
-            for c in self.AARCH64_INCOMPATILE_ARTIFACTS:
+            for c in self.RISCV64_INCOMPATILE_ARTIFACTS:
                 match = c.pattern_compiled.search(artifact)
                 if match:
                     issues.append(JavaPomIssue(filename,

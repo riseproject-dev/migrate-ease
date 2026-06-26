@@ -13,13 +13,14 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
-from .java_pom_scanner import JavaPomScanner
+
+from .java_jar_scanner import JavaJarScanner
 
 
-class Arm64PomScanner(JavaPomScanner):
+class RiscvJarScanner(JavaJarScanner):
 
     """
-    Scanner that scans binaries in a JAR for ARM64 potential
+    Scanner that scans .jar/.war packages for RISC-V potential
     porting issues.
     """
 

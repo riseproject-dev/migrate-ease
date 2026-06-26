@@ -15,16 +15,16 @@ limitations under the License.
 """
 
 from common.issue_type_filter import IssueTypeFilter
-from .arm64_jar_scanner import Arm64JarScanner
-from .arm64_pom_scanner import Arm64PomScanner
-from .arm64_java_source_scanner import Arm64JavaSourceScanner
+from .riscv_jar_scanner import RiscvJarScanner
+from .riscv_pom_scanner import RiscvPomScanner
+from .riscv_java_source_scanner import RiscvJavaSourceScanner
 
 
-class Arm64Scanners:
+class RiscvScanners:
 
     """
     Set of scanners that may be used to scan for potential porting issues in
-    files from x86_64 processors to aarch64 processors.
+    files from x86_64 or Arm processors to RISC-V processors.
     """
 
     def __init__(self, issue_type_config, output_format, march):
@@ -34,9 +34,9 @@ class Arm64Scanners:
             configuration.
         """
         self.scanners = [
-                         Arm64JarScanner(output_format=output_format, march=march),
-                         Arm64PomScanner(output_format=output_format, march=march),
-                         Arm64JavaSourceScanner(output_format=output_format, march=march)
+                         RiscvJarScanner(output_format=output_format, march=march),
+                         RiscvPomScanner(output_format=output_format, march=march),
+                         RiscvJavaSourceScanner(output_format=output_format, march=march)
                         ]
 
         self.filters = []
