@@ -1,0 +1,12 @@
+{
+  "name": "migrate-ease-js-test_rv64gc",
+  "version": "0.0.1",
+  "description": "Minimal package.json fixture for the RISC-V port.",
+  "dependencies": {
+    "fsevents": "2.3.2",
+    "express": "4.18.0"
+  },
+  "devDependencies": {
+    "node-sass": "5.0.0"
+  }
+}

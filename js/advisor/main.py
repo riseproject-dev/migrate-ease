@@ -5,7 +5,7 @@ import pathlib
 import sys
 from pathlib import Path
 from common.localization import _
-from common.arch_strings import SUPPORTED_MARCH
+from common.arch_strings import SUPPORTED_MARCH, DEFAULT_ARCH
 
 
 def _check_blacklist(package_name, version, result, file, file_lines):
@@ -134,8 +134,8 @@ def main():
                         type=argparse.FileType('w'),
                         default='-')
     parser.add_argument('--march',
-                        help='target processor architecture (default: armv8-a).',
-                        default='armv8-a')
+                        help='target processor architecture (default: %s).' % DEFAULT_ARCH,
+                        default=DEFAULT_ARCH)
     parser.add_argument('--git-repo',
                         help=_('git repository address to scan, when present, repo will be cloned to local.'),
                         metavar='REPO',
