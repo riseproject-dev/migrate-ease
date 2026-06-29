@@ -15,14 +15,14 @@ limitations under the License.
 """
 
 from common.issue_type_filter import IssueTypeFilter
-from .arm64_docker_scanner import Arm64DockerScanner
+from .riscv_docker_scanner import RiscvDockerScanner
 
 
-class Arm64Scanners:
+class RiscvScanners:
 
     """
     Set of scanners that may be used to scan for potential porting issues in
-    files from x86 Intel processors to aarch64 processors.
+    files from x86 Intel or Arm processors to RISC-V processors.
     """
 
     def __init__(self, issue_type_config, output_format, march):
@@ -31,7 +31,7 @@ class Arm64Scanners:
             issue_type_config (IssueTypeConfig): issue type filter
             configuration.
         """
-        self.scanners = [Arm64DockerScanner(output_format=output_format, march=march)]
+        self.scanners = [RiscvDockerScanner(output_format=output_format, march=march)]
 
         self.filters = []
         self.filters += [IssueTypeFilter(issue_type_config)]

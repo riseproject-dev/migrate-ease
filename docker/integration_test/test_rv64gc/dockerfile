@@ -1,7 +1,7 @@
-FROM registry.openanolis.cn/openanolis/anolisos:23.3
+FROM registry.openanolis.cn/openanolis/anolisos:23.3 //expect: ImageIssue
 FROM registry-1.docker.io/openanolis/anolisos:23.3 //expect: ImageIssue
-FROM debian:stretch
-FROM rancher/rancher-agent:v2.12-head
+FROM debian:stretch //expect: ImageIssue
+FROM rancher/rancher-agent:v2.12-head //expect: ImageIssue
 FROM amd64/clearlinux //expect: ImageIssue
 ARG base=amd64/ubuntu:20.04 //expect: ConfigurationInfoIssue
 FROM ${base} //expect: ImageIssue
@@ -18,7 +18,7 @@ RUN make -C /usr/src/redis install
 RUN pip install keystone-engine
 RUN pip install fibers
 
-# Python extension packages only available for arm/arm64/aarch64 
+# Python extension packages only available for arm/arm64/aarch64
 RUN pip install pycuda-arm-linux
 RUN pip install HTSeq-arm-linux
 RUN pip install wlauto

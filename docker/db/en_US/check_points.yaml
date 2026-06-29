@@ -341,3 +341,5 @@ X86_PYTHON_EXTENSION_PACKAGES:
           It supports all Intel and AMD instructions.
 
           For more details, visit: https://pypi.org/project/iced-x86/
+# RISC-V-incompatible Python extension packages. Empty for now.
+RISCV64_PYTHON_EXTENSION_PACKAGES: []

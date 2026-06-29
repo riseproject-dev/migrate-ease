@@ -17,10 +17,10 @@ limitations under the License.
 from .dockerfile_scanner import DockerfileScanner
 
 
-class Arm64DockerScanner(DockerfileScanner):
+class RiscvDockerScanner(DockerfileScanner):
 
     """
-    Scanner that scans dockerfile for ARM64 potential
+    Scanner that scans dockerfiles for RISC-V potential
     porting issues.
     """
 

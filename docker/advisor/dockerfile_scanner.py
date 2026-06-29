@@ -21,7 +21,7 @@ import time
 import requests
 from typing import Tuple
 
-from common.arch_strings import NON_AARCH64_ARCHS, SUPPORTED_MARCH
+from common.arch_strings import NON_RISCV_ARCHS, SUPPORTED_MARCH
 from common.continuation_parser import ContinuationParser
 from common.naive_comment_parser import NaiveCommentParser
 from common.report_factory import ReportOutputFormat
@@ -41,9 +41,9 @@ class DockerfileScanner(DockerScanner):
 
     DOCKERFILE_SOURCE = ['Dockerfile', 'dockerfile']
 
-    NON_AARCH64_RE = re.compile(r'.*(%s).*' % '|'.join([(r'%s' % x) for x in NON_AARCH64_ARCHS]))
+    NON_RISCV_RE = re.compile(r'.*(%s).*' % '|'.join([(r'%s' % x) for x in NON_RISCV_ARCHS]))
 
-    AARCH64_INCOMPATIBLE_EXTENSION_PACKAGES = []
+    RISCV_INCOMPATIBLE_EXTENSION_PACKAGES = []
 
     def __init__(self, output_format, march):
         self.output_format = output_format
@@ -58,10 +58,11 @@ class DockerfileScanner(DockerScanner):
 
         start_time = time.time()
 
-        self.AARCH64_INCOMPATIBLE_EXTENSION_PACKAGES = init_checkpoints(
+        self.RISCV_INCOMPATIBLE_EXTENSION_PACKAGES = init_checkpoints(
             self.checkpoints_content['X86_PYTHON_EXTENSION_PACKAGES'],
-            self.checkpoints_content["AARCH64_PYTHON_EXTENSION_PACKAGES"] +
-            self.checkpoints_content["COMMON_AARCH64_AND_X86_PYTHON_EXTENSION_PACKAGES"]
+            self.checkpoints_content['RISCV64_PYTHON_EXTENSION_PACKAGES'] +
+            self.checkpoints_content['AARCH64_PYTHON_EXTENSION_PACKAGES'] +
+            self.checkpoints_content['COMMON_AARCH64_AND_X86_PYTHON_EXTENSION_PACKAGES']
         )
 
         # please remember to remove lines for profiling after optimizing :)
@@ -105,7 +106,7 @@ class DockerfileScanner(DockerScanner):
 
         return registry, repository, tag
 
-    def check_arm64_support(self, registry, repo, tag):
+    def check_riscv_support(self, registry, repo, tag):
         supported = False
         if registry == "registry-1.docker.io":
             # For docker hub, use a simple way to check
@@ -116,7 +117,7 @@ class DockerfileScanner(DockerScanner):
                 # Parse the JSON output
                 data = response.json()
                 for image in data.get('images', []):
-                    if image['architecture'] == "arm64":
+                    if image['architecture'] == "riscv64":
                         supported = True
                         break
             except Exception as err:
@@ -155,7 +156,7 @@ class DockerfileScanner(DockerScanner):
                     # Parse the JSON output
                     data = response.json()
                     for image in data.get('manifests', []):
-                        if image['platform']['architecture'] == "arm64":
+                        if image['platform']['architecture'] == "riscv64":
                             supported = True
                             break
                 except requests.exceptions.HTTPError as http_err:
@@ -180,8 +181,8 @@ class DockerfileScanner(DockerScanner):
         comment_parser = NaiveCommentParser()
 
         if self.march in SUPPORTED_MARCH:
-            PACKAGE_CHECKPOINTS = self.AARCH64_INCOMPATIBLE_EXTENSION_PACKAGES
-            ARCH_RE = self.NON_AARCH64_RE
+            PACKAGE_CHECKPOINTS = self.RISCV_INCOMPATIBLE_EXTENSION_PACKAGES
+            ARCH_RE = self.NON_RISCV_RE
         else:
             raise RuntimeError('unknown target processor architecuture: %s.' % self.march)
 
@@ -218,7 +219,7 @@ class DockerfileScanner(DockerScanner):
                                          checkpoint=None))
                 else:
                     registry, repo, tag = self.parse_image_name(base_img)
-                    if False == self.check_arm64_support(registry, repo, tag):
+                    if False == self.check_riscv_support(registry, repo, tag):
                         issues.append(ImageIssue(filename,
                                          lineno,
                                          march=self.march,
